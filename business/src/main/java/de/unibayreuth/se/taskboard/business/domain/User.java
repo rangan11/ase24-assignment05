@@ -20,4 +20,5 @@ public class User {
         private LocalDateTime createdAt = LocalDateTime.now(ZoneId.of("UTC")); // set on task creation
         @NonNull
         private String name;
+
 }

@@ -21,7 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-
+import lombok.extern.slf4j.Slf4j;
 import java.util.List;
 import java.util.UUID;
 
@@ -32,6 +32,7 @@ import java.util.UUID;
         )
 )
 @Tag(name = "Tasks")
+@Slf4j
 @Controller
 @RequestMapping("/api/tasks")
 @RequiredArgsConstructor
@@ -133,7 +134,7 @@ public class TaskController {
             }
     )
     @GetMapping("/assignee/{userId}")
-    public ResponseEntity<List<TaskDto>> getByStatus(@PathVariable UUID userId) {
+    public ResponseEntity<List<TaskDto>> getByAssignee(@PathVariable UUID userId) {
         return ResponseEntity.ok(
                 taskService.getByAssignee(userId).stream()
                         .map(taskDtoMapper::fromBusiness)
@@ -195,7 +196,6 @@ public class TaskController {
         if (!id.equals(taskDto.getId())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Task ID in path and body do not match.");
         }
-
         try {
             return ResponseEntity.ok(
                     taskDtoMapper.fromBusiness(
