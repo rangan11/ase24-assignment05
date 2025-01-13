@@ -4,7 +4,6 @@ import de.unibayreuth.se.taskboard.business.exceptions.DuplicateNameException;
 import de.unibayreuth.se.taskboard.business.domain.User;
 import de.unibayreuth.se.taskboard.business.exceptions.UserNotFoundException;
 import org.springframework.lang.NonNull;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -17,7 +16,7 @@ public interface UserPersistenceService {
     @NonNull
     List<User> getAll();
     @NonNull
-    Optional<User> getById(UUID id);
+    Optional<User> getById(@NonNull UUID id);
     @NonNull
-    User upsert(User user) throws UserNotFoundException, DuplicateNameException;
+    User upsert(@NonNull User user) throws UserNotFoundException, DuplicateNameException;
 }

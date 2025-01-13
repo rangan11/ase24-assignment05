@@ -23,6 +23,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public void clear() {
         taskPersistenceService.clear();
+        userPersistenceService.clear();
     }
 
     @Override
