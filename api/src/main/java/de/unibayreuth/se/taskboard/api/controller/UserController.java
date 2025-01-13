@@ -3,6 +3,7 @@ package de.unibayreuth.se.taskboard.api.controller;
 
 import de.unibayreuth.se.taskboard.api.dtos.UserDto;
 import de.unibayreuth.se.taskboard.api.mapper.UserDtoMapper;
+import de.unibayreuth.se.taskboard.business.domain.User;
 import de.unibayreuth.se.taskboard.business.exceptions.DuplicateNameException;
 import de.unibayreuth.se.taskboard.business.exceptions.MalformedRequestException;
 import de.unibayreuth.se.taskboard.business.exceptions.UserNotFoundException;
@@ -81,18 +82,21 @@ public class UserController {
                 }
         )
         @GetMapping("/{id}")
-        public ResponseEntity<Optional<UserDto>> getById(@PathVariable UUID id) {
-                try {
-                        return ResponseEntity.ok(
-                                Optional.ofNullable(
-                                        userDtoMapper.fromOptional(
-                                                userService.getById(id)
-                                        )
-                                )
-                        );
-                } catch (UserNotFoundException e) {
-                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        public ResponseEntity<UserDto> getById(@PathVariable UUID id) {
+            try {
+                Optional<User> retrievedUser = userService.getById(id);
+
+                if (retrievedUser.isPresent()) {
+                    return ResponseEntity.ok(
+                            userDtoMapper.fromBusiness(retrievedUser.get())
+                    );
+                } else {
+                    throw new UserNotFoundException("User with provided ID " + id + " could not be found");
                 }
+
+            } catch (UserNotFoundException e) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+            }
         }
 
         @Operation(
